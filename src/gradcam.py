@@ -122,10 +122,6 @@ if __name__ == '__main__':
     # parse the arguments
     args = parser.parse_args()
 
-    # do stuff
-
-
-if __name__ == '__main__':
     # Get params
     (original_image, prep_img, target_class, file_name_to_export, pretrained_model) =\
         get_example_params(args.input_image, 1)
