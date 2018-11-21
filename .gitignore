@@ -1,6 +1,7 @@
 # results
 results/
 input_images/
+models/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
