@@ -62,7 +62,8 @@ def save_class_activation_images(org_img, activation_map, file_name):
     if not os.path.exists('../results'):
         os.makedirs('../results')
     # Grayscale activation map
-    heatmap, heatmap_on_image = apply_colormap_on_image(org_img, activation_map, 'hsv')
+    heatmap, heatmap_on_image = apply_colormap_on_image(
+        org_img, activation_map, 'viridis')
     # Save colored heatmap
     path_to_file = os.path.join('../results', file_name+'_Cam_Heatmap.png')
     save_image(heatmap, path_to_file)
@@ -93,7 +94,8 @@ def apply_colormap_on_image(org_im, activation, colormap_name):
 
     # Apply heatmap on iamge
     heatmap_on_image = Image.new("RGBA", org_im.size)
-    heatmap_on_image = Image.alpha_composite(heatmap_on_image, org_im.convert('RGBA'))
+    heatmap_on_image = Image.alpha_composite(
+        heatmap_on_image, org_im.convert('RGBA'))
     heatmap_on_image = Image.alpha_composite(heatmap_on_image, heatmap)
     return no_trans_heatmap, heatmap_on_image
 
@@ -188,12 +190,13 @@ def get_positive_negative_saliency(gradient):
     return pos_saliency, neg_saliency
 
 
-def get_example_params(example_index):
+def get_example_params(img_path, target_class):
     """
         Gets used variables for almost all visualizations, like the image, model etc.
 
     Args:
-        example_index (int): Image id to use from examples
+        image_path (str): Path to image to get params for
+        target_class (int): Class of the image
 
     returns:
         original_image (numpy arr): Original image read from the file
@@ -202,12 +205,6 @@ def get_example_params(example_index):
         file_name_to_export (string): File name to export the visualizations
         pretrained_model(Pytorch model): Model to use for the operations
     """
-    # Pick one of the examples
-    example_list = (('../input_images/snake.jpg', 56),
-                    ('../input_images/cat_dog.png', 243),
-                    ('../input_images/spider.png', 72))
-    img_path = example_list[example_index][0]
-    target_class = example_list[example_index][1]
     file_name_to_export = img_path[img_path.rfind('/')+1:img_path.rfind('.')]
     # Read image
     original_image = Image.open(img_path).convert('RGB')

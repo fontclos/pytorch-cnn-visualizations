@@ -1,3 +1,4 @@
+import argparse
 """
 Created on Thu Oct 26 11:06:51 2017
 
@@ -14,6 +15,7 @@ class CamExtractor():
     """
         Extracts cam features from the model
     """
+
     def __init__(self, model, target_layer):
         self.model = model
         self.target_layer = target_layer
@@ -50,6 +52,7 @@ class GradCam():
     """
         Produces class activation map
     """
+
     def __init__(self, model, target_layer):
         self.model = model
         self.model.eval()
@@ -76,7 +79,8 @@ class GradCam():
         # Get convolution outputs
         target = conv_output.data.numpy()[0]
         # Get weights from gradients
-        weights = np.mean(guided_gradients, axis=(1, 2))  # Take averages for each gradient
+        # Take averages for each gradient
+        weights = np.mean(guided_gradients, axis=(1, 2))
         # Create empty numpy array for cam
         cam = np.ones(target.shape[1:], dtype=np.float32)
         # Multiply each weight with its conv output and then, sum
@@ -84,16 +88,47 @@ class GradCam():
             cam += w * target[i, :, :]
         cam = cv2.resize(cam, (224, 224))
         cam = np.maximum(cam, 0)
-        cam = (cam - np.min(cam)) / (np.max(cam) - np.min(cam))  # Normalize between 0-1
+        cam = (cam - np.min(cam)) / (np.max(cam) -
+                                     np.min(cam))  # Normalize between 0-1
         cam = np.uint8(cam * 255)  # Scale between 0-255 to visualize
         return cam
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        "Descrive what the program does in one"
+        "or two lines.",
+        add_help=False)
+
+    # Required arguments
+    required = parser.add_argument_group('required arguments')
+    required.add_argument(
+        "-i", "--input_image",
+        help="Path to input image, size 224x224",
+        default=".",
+        required=True,
+        type=str)
+
+    # Optional params
+    optional = parser.add_argument_group('optional arguments')
+
+    # Help added manually so that it shows up as optional arg
+    optional.add_argument(
+        "-h", "--help",
+        action="help",
+        default=argparse.SUPPRESS,
+        help='Show this help message and exit.')
+
+    # parse the arguments
+    args = parser.parse_args()
+
+    # do stuff
+
+
+if __name__ == '__main__':
     # Get params
-    target_example = 2  # Snake
     (original_image, prep_img, target_class, file_name_to_export, pretrained_model) =\
-        get_example_params(target_example)
+        get_example_params(args.input_image, 1)
     # Grad cam
     grad_cam = GradCam(pretrained_model, target_layer=11)
     # Generate cam mask
