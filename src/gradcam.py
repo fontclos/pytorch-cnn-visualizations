@@ -115,7 +115,7 @@ if __name__ == '__main__':
         "-p", "--pretrained_model",
         help="pytorch pretrained model (alexnet at the moment)",
         default=None,
-        required=True,
+        required=False,
         type=str)
 
     # Help added manually so that it shows up as optional arg
