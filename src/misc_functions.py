@@ -190,7 +190,7 @@ def get_positive_negative_saliency(gradient):
     return pos_saliency, neg_saliency
 
 
-def get_example_params(img_path, target_class):
+def get_example_params(img_path, target_class, pretrained_model_path=None):
     """
         Gets used variables for almost all visualizations, like the image, model etc.
 
@@ -212,6 +212,11 @@ def get_example_params(img_path, target_class):
     prep_img = preprocess_image(original_image)
     # Define model
     pretrained_model = models.alexnet(pretrained=True)
+    if pretrained_model_path is not None:
+        pretrained_model.load_state_dict(torch.load(
+            pretrained_model_path, map_location="cpu"))
+        pretrained_model.eval()
+        print(pretrained_model.data.classes)
     return (original_image,
             prep_img,
             target_class,

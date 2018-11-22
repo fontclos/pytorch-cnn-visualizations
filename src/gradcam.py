@@ -53,7 +53,7 @@ class GradCam():
         Produces class activation map
     """
 
-    def __init__(self, model, target_layer):
+    def __init__(self, model, target_layer,):
         self.model = model
         self.model.eval()
         # Define extractor
@@ -108,6 +108,12 @@ if __name__ == '__main__':
         default=".",
         required=True,
         type=str)
+    required.add_argument(
+        "-p", "--pretrained_model",
+        help="pytorch pretrained model (alexnet at the moment)",
+        default=".",
+        required=True,
+        type=str)
 
     # Optional params
     optional = parser.add_argument_group('optional arguments')
@@ -124,7 +130,8 @@ if __name__ == '__main__':
 
     # Get params
     (original_image, prep_img, target_class, file_name_to_export, pretrained_model) =\
-        get_example_params(args.input_image, 1)
+        get_example_params(args.input_image, 1,
+                           pretrained_model_path=args.pretrained_model)
     # Grad cam
     grad_cam = GradCam(pretrained_model, target_layer=11)
     # Generate cam mask
