@@ -108,15 +108,15 @@ if __name__ == '__main__':
         default=".",
         required=True,
         type=str)
-    required.add_argument(
-        "-p", "--pretrained_model",
-        help="pytorch pretrained model (alexnet at the moment)",
-        default=".",
-        required=True,
-        type=str)
 
     # Optional params
     optional = parser.add_argument_group('optional arguments')
+    optional.add_argument(
+        "-p", "--pretrained_model",
+        help="pytorch pretrained model (alexnet at the moment)",
+        default=None,
+        required=True,
+        type=str)
 
     # Help added manually so that it shows up as optional arg
     optional.add_argument(
